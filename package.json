@@ -9,10 +9,21 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-native-fontawesome": "^0.3.0",
+    "@react-native-async-storage/async-storage": "1.17.11",
+    "@react-native-material/core": "^1.3.7",
+    "@react-navigation/native-stack": "^6.9.12",
     "expo": "~48.0.15",
     "expo-status-bar": "~1.4.4",
+    "formik": "^2.2.9",
+    "fortawesome": "^0.0.1-security",
     "react": "18.2.0",
-    "react-native": "0.71.7"
+    "react-native": "0.71.7",
+    "react-native-chart-kit": "^6.12.0",
+    "react-native-svg": "13.4.0",
+    "yup": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
