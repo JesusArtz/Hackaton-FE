@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ViewBase, Image, BackHandler, ToastAndroid, ScrollView, ImageBackground, SafeAreaView, FlatList, Dimensions } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import proxy from "../../proxy";
 import NavBar from "../components/navbar";
-import { faMoneyBillTransfer, faCoins } from "@fortawesome/free-solid-svg-icons";
+import { faPiggyBank, faCoins } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Movements from "../components/movements";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 function Home({ session, callback }) {
     const navigation = useNavigation();
     const [user, setUser] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [ref, setRef] = useState(null);
     const heightPercentage = Dimensions.get("window").height * 0.56;
+    const isFocused = useIsFocused();
+
+    if (session.token === '' || session.token === undefined) {
+        navigation.navigate({ name: 'Main', params: { callback: callback } });
+    }
+
 
     const movements = [
         {
@@ -53,21 +58,11 @@ function Home({ session, callback }) {
         return total;
     }, 0);
 
-
-    if (session.token === '' || session.token === undefined) {
-        navigation.navigate({ name: 'Main', params: { callback: callback } });
-    }
-
-
     useEffect(() => {
         const handler = BackHandler.addEventListener('hardwareBackPress', () => true);
         return () => handler.remove();
     });
 
-    // Create a loading function
-    const loadingFunction = () => {
-        setLoading(false);
-    }
 
     // Create a function to get the user data
     const getUserData = async () => {
@@ -81,17 +76,16 @@ function Home({ session, callback }) {
             });
             const json = await response.json();
             setUser(json);
-            loadingFunction();
         } catch (error) {
             console.error(error);
         }
     }
 
-    // Call the function to get the user data
     useEffect(() => {
-        getUserData();
-    }, []);
-
+        if(isFocused){
+            getUserData();
+        }
+    }, [isFocused]);
 
     return (
         <SafeAreaView style={{ flex: 1, paddingTop: 35, backgroundColor: "pink" }}>
@@ -119,16 +113,16 @@ function Home({ session, callback }) {
             <View style={{ zIndex: 11, borderTopRightRadius: 20, borderTopLeftRadius: 20, backgroundColor: "white", height: "100%" }} >
                 <View style={styles.horizontalButtonsView}>
                     <View style={{ flexDirection: "column", alignItems: "center" }}>
-                        <TouchableOpacity onPress={() => navigation.navigate('SendMoney')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Transfer')}>
                             <View style={styles.horizontalButtonsRounded}>
-                                <FontAwesomeIcon icon={faMoneyBillTransfer} size={30} color="black" />
+                                <FontAwesomeIcon icon={faPiggyBank} size={30} color="black" />
                             </View>
                         </TouchableOpacity>
-                        <Text style={styles.horizontalButtonsText}>Enviar</Text>
+                        <Text style={styles.horizontalButtonsText}>Plan de ahorro</Text>
                     </View>
 
                     <View style={{ flexDirection: "column", alignItems: "center" }}>
-                        <TouchableOpacity onPress={() => navigation.navigate('SendMoney')}>
+                        <TouchableOpacity onPress={() => navigation.navigate('Deposit')}>
                             <View style={styles.horizontalButtonsRounded}>
                                 <FontAwesomeIcon icon={faCoins} size={25} color="black" />
                             </View>
